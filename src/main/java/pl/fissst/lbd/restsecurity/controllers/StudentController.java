@@ -1,5 +1,6 @@
 package pl.fissst.lbd.restsecurity.controllers;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.fissst.lbd.restsecurity.dto.Student;
 import pl.fissst.lbd.restsecurity.services.StudentService;
@@ -16,31 +17,46 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-
     @GetMapping
-    public List<Student> getAllStudent(){
+    public ResponseEntity<List<Student>> getAllStudent(){
 
-        return studentService.getAllStudents();
+        return ResponseEntity
+                .ok()
+                .header("successful","true")
+                .body(studentService.getAllStudents());
     }
 
     @PostMapping
-    public Student addStudent(@RequestBody Student student){
-        return studentService.insertStudent(student);
+    public ResponseEntity<Student> addStudent(@RequestBody Student student){
+        return ResponseEntity
+                .ok()
+                .header("successful","true")
+                .body(studentService.insertStudent(student));
     }
 
     @PutMapping("/{id}")
-    public Student editStudent(
+    public ResponseEntity<Student> editStudent(
             @PathVariable("id") Long id,
             @RequestParam("age") Integer age,
             @RequestParam("lastName") String lastName){
-        return studentService.editStudent(id,age,lastName);
+        return ResponseEntity
+                .ok()
+                .header("successful","true")
+                .body(studentService.editStudent(id,age,lastName));
     }
     @DeleteMapping("/{id}")
-    public Boolean deleteStudent(@PathVariable("id") Long id){
-        return studentService.deleteStudent(id);
+    public ResponseEntity<Boolean> deleteStudent(@PathVariable("id") Long id){
+        return ResponseEntity
+                .ok()
+                .header("successful","true")
+                .body(studentService.deleteStudent(id));
     }
     @GetMapping("/{id}")
-    public Student getStudent(@PathVariable("id") Long id){
-        return studentService.getStudent(id);
+    public ResponseEntity<Student> getStudent(@PathVariable("id") Long id){
+        return ResponseEntity
+                .ok()
+                .header("successful","true")
+                .body(studentService.getStudent(id));
     }
+
 }
