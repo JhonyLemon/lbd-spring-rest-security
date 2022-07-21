@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.fissst.lbd.restsecurity.services.MyUserDetailsService;
 
-import static pl.fissst.lbd.restsecurity.security.SecurityRoles.*;
+import static pl.fissst.lbd.restsecurity.security.SecurityPermissions.*;
 
 @EnableWebSecurity
 @Configuration
@@ -29,11 +29,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/user/**").authenticated()
-                .antMatchers(HttpMethod.PUT, "/api/user/**").hasAnyRole(ADMIN.name(),USER.name())
-                .antMatchers(HttpMethod.GET, "/api/admin/**").hasAnyRole(ADMIN.name(),USER.name())
-                .antMatchers(HttpMethod.POST, "/api/admin/**").hasAnyRole(ADMIN.name())
-                .antMatchers(HttpMethod.DELETE, "/api/admin/**").hasAnyRole(ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority(ADMIN.name(),USER_READ.name())
+                .antMatchers(HttpMethod.PUT, "/api/user/**").hasAnyAuthority(ADMIN.name(),USER_EDIT.name())
+                .antMatchers(HttpMethod.GET, "/api/admin/**").hasAnyAuthority(ADMIN.name())
+                .antMatchers(HttpMethod.POST, "/api/admin/**").hasAnyAuthority(ADMIN.name())
+                .antMatchers(HttpMethod.DELETE, "/api/admin/**").hasAnyAuthority(ADMIN.name())
                 .and()
                 .httpBasic();
     }
