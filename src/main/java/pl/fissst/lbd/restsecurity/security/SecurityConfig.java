@@ -1,13 +1,25 @@
 package pl.fissst.lbd.restsecurity.security;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.fissst.lbd.restsecurity.services.MyUserDetailsService;
+
+import static pl.fissst.lbd.restsecurity.security.SecurityRoles.*;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final MyUserDetailsService userDetailsService;
+
+
+    public SecurityConfig(MyUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -15,10 +27,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/user/**").hasAnyRole("user","admin")
-                .antMatchers("/api/admin/**").hasAnyRole("admin")
+                .antMatchers("/api/user/**")
+                .hasAnyRole(ADMIN.name(),USER.name())
+                .antMatchers("/api/admin/**")
+                .hasAnyRole(ADMIN.name())
                 .and()
                 .httpBasic();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.eraseCredentials(false).userDetailsService(userDetailsService);
     }
 
 }
