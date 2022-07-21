@@ -2,6 +2,7 @@ package pl.fissst.lbd.restsecurity.services;
 
 import org.springframework.stereotype.Service;
 import pl.fissst.lbd.restsecurity.dto.Student;
+import pl.fissst.lbd.restsecurity.dto.enums.Subject;
 
 import java.util.*;
 
@@ -45,8 +46,46 @@ public class StudentService {
                         "Paweł",
                         "Nowak",
                         30
+                ),
+                new Student(
+                        null,
+                        "Jan",
+                        "Pleśniak",
+                        20,
+                        new ArrayList<>(Arrays.asList(Subject.ALGEBRA, Subject.LAW))
+                ),
+                new Student(
+                        null,
+                        "Kacper",
+                        "Pole",
+                        20,
+                        new ArrayList<>(Arrays.asList(Subject.BIOLOGY,Subject.LAW))
+                ),
+                new Student(
+                        null,
+                        "Michael",
+                        "Prostokąt",
+                        15,
+                        new ArrayList<>(Arrays.asList(Subject.ALGEBRA,Subject.BIOLOGY))
+                ),
+                new Student(
+                        null,
+                        "Zdzisław",
+                        "Romb",
+                        16,
+                        new ArrayList<>(Arrays.asList(Subject.ALGEBRA,Subject.LAW))
+                ),
+                new Student(
+                        null,
+                        "Kamil",
+                        "Cośik",
+                        19,
+                        new ArrayList<>(Arrays.asList(Subject.BIOLOGY,Subject.LAW))
                 )
         });
+
+
+
     }
 
     public List<Student> getAllStudents(){
