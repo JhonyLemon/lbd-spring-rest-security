@@ -23,7 +23,8 @@ public class StudentControllerTests {
 
     @Test
     void getAllStudents() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/student"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/student")
+                        .header("role","TEACHER_ROLE"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
@@ -38,7 +39,8 @@ public class StudentControllerTests {
                                 new ObjectMapper().writeValueAsString(
                                         new Student(null,"dd","dd",3,null)
                                 )
-                        ))
+                        )
+                        .header("role","TEACHER_ROLE"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.firstName",Is.is("dd")));
@@ -46,7 +48,8 @@ public class StudentControllerTests {
 
     @Test
     void editStudent() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/student/2?age=30&lastName=Marek"))
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/student/2?age=30&lastName=Marek")
+                        .header("role","TEACHER_ROLE"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.age", Is.is(30)))
@@ -55,14 +58,16 @@ public class StudentControllerTests {
     }
     @Test
     void deleteStudent() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/student/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/student/1")
+                        .header("role","TEACHER_ROLE"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", Is.is(true)));
     }
     @Test
     void getStudent() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/student/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/student/1")
+                        .header("role","TEACHER_ROLE"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.firstName", Is.is("Adam")));

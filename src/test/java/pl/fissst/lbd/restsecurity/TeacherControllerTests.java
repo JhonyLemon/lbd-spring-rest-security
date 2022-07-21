@@ -30,8 +30,8 @@ public class TeacherControllerTests {
     @Test
     @Order(2)
     void addTeacher() throws Exception{
-
         mockMvc.perform(MockMvcRequestBuilders.post("/api/teacher")
+                        .header("role","TEACHER_ROLE")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 new ObjectMapper().writeValueAsString(
@@ -46,21 +46,24 @@ public class TeacherControllerTests {
     @Test
     @Order(1)
     void deleteTeacher() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/teacher/3"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/teacher/3")
+                        .header("role","TEACHER_ROLE"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", Is.is(true)));
     }
     @Test
     void getTeacher() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/teacher/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/teacher/1")
+                        .header("role","TEACHER_ROLE"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.firstName", Is.is("Kuba")));
     }
     @Test
     void getTeacherClass() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/teacher/1/class"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/teacher/1/class")
+                        .header("role","TEACHER_ROLE"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
@@ -69,7 +72,8 @@ public class TeacherControllerTests {
     }
     @Test
     void deleteStudentFromClassByTeacherId() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/teacher/1/class/remove/9"))
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/teacher/1/class/remove/9")
+                        .header("role","TEACHER_ROLE"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", Is.is(true)));
