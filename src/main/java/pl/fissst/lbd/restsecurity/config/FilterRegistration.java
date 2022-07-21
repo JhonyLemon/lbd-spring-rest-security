@@ -15,6 +15,7 @@ public class FilterRegistration {
 
         registration.setFilter(new AuthorizationStudentFilter());
         registration.addUrlPatterns("/api/student/*");
+        registration.setOrder(2);
 
         return registration;
     }
