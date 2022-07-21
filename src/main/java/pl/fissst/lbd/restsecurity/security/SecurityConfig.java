@@ -1,6 +1,7 @@
 package pl.fissst.lbd.restsecurity.security;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,10 +29,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/user/**")
-                .hasAnyRole(ADMIN.name(),USER.name())
-                .antMatchers("/api/admin/**")
-                .hasAnyRole(ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/api/user/**").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/user/**").hasAnyRole(ADMIN.name(),USER.name())
+                .antMatchers(HttpMethod.GET, "/api/admin/**").hasAnyRole(ADMIN.name(),USER.name())
+                .antMatchers(HttpMethod.POST, "/api/admin/**").hasAnyRole(ADMIN.name())
+                .antMatchers(HttpMethod.DELETE, "/api/admin/**").hasAnyRole(ADMIN.name())
                 .and()
                 .httpBasic();
     }
