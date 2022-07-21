@@ -70,4 +70,40 @@ public class StudentService {
         return this.students;
     }
 
+    public Student insertStudent(Student student) {
+        return addStudent(student);
+    }
+
+    public Student editStudent(Long id,Integer age, String lastName){
+        if(age<=0)
+            throw new IllegalArgumentException("Age cannot be negative");
+        Student student = index.get(id);
+        if(student!=null){
+            student.setLastName(lastName);
+            student.setAge(age);
+            return student;
+        }
+        throw new NoSuchElementException("Student with given id not found");
+    }
+
+    public Boolean deleteStudent(Long id){
+        Student student = index.get(id);
+        if(student!=null){
+            index.remove(student);
+            if(students.remove(student))
+                return true;
+            else
+                throw new IllegalStateException("Failed to delete student");
+        }
+        throw new NoSuchElementException("Student with given id not found");
+    }
+
+    public Student getStudent(Long id){
+        Student student = index.get(id);
+        if(student!=null){
+            return student;
+        }
+        throw new NoSuchElementException("Student with given id not found");
+    }
+
 }
