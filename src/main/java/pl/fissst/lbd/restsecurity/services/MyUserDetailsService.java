@@ -31,6 +31,11 @@ public class MyUserDetailsService implements UserDetailsService {
                     .password(encoder.encode("admin"))
                     .authorities(ADMIN.name())
                     .build());
+            put("spectator", User.builder()
+                    .username("spectator")
+                    .password(encoder.encode("spectator"))
+                    .authorities(USER_READ.name())
+                    .build());
         }};
     }
 
