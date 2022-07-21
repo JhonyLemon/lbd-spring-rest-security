@@ -15,18 +15,20 @@ import static pl.fissst.lbd.restsecurity.security.SecurityRoles.*;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
-    private final Map<String, UserDetails> users;;
+    private final Map<String, UserDetails> users;
+    private final PasswordEncoder encoder;
 
-    public MyUserDetailsService() {
+    public MyUserDetailsService(PasswordEncoder encoder) {
+        this.encoder = encoder;
         users = new HashMap<>() {{
             put("user", User.builder()
                     .username("user")
-                    .password("user")
+                    .password(encoder.encode("user"))
                     .roles(USER.name())
                     .build());
             put("admin", User.builder()
                     .username("admin")
-                    .password("admin")
+                    .password(encoder.encode("admin"))
                     .roles(ADMIN.name())
                     .build());
         }};

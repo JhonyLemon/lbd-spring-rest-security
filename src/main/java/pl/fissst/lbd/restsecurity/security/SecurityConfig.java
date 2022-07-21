@@ -15,10 +15,11 @@ import static pl.fissst.lbd.restsecurity.security.SecurityRoles.*;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final MyUserDetailsService userDetailsService;
+    private final PasswordEncoder encoder;
 
-
-    public SecurityConfig(MyUserDetailsService userDetailsService) {
+    public SecurityConfig(MyUserDetailsService userDetailsService, PasswordEncoder encoder) {
         this.userDetailsService = userDetailsService;
+        this.encoder = encoder;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.eraseCredentials(false).userDetailsService(userDetailsService);
+        auth.eraseCredentials(false).userDetailsService(userDetailsService).passwordEncoder(encoder);
     }
 
 }
