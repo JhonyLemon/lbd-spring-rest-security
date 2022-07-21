@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
-import static pl.fissst.lbd.restsecurity.security.SecurityRoles.*;
+import static pl.fissst.lbd.restsecurity.security.SecurityPermissions.*;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
@@ -24,12 +24,12 @@ public class MyUserDetailsService implements UserDetailsService {
             put("user", User.builder()
                     .username("user")
                     .password(encoder.encode("user"))
-                    .roles(USER.name())
+                    .authorities(USER_EDIT.name(),USER_READ.name())
                     .build());
             put("admin", User.builder()
                     .username("admin")
                     .password(encoder.encode("admin"))
-                    .roles(ADMIN.name())
+                    .authorities(ADMIN.name())
                     .build());
         }};
     }
