@@ -6,8 +6,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.fissst.lbd.restsecurity.filters.JwtAuthenticationFilter;
+import pl.fissst.lbd.restsecurity.filters.JwtAuthorizationFilter;
+import pl.fissst.lbd.restsecurity.jwt.JwtConfig;
 import pl.fissst.lbd.restsecurity.services.MyUserDetailsService;
+
+import javax.crypto.SecretKey;
 
 import static pl.fissst.lbd.restsecurity.security.SecurityPermissions.*;
 
@@ -18,9 +24,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final MyUserDetailsService userDetailsService;
     private final PasswordEncoder encoder;
 
-    public SecurityConfig(MyUserDetailsService userDetailsService, PasswordEncoder encoder) {
+    private final SecretKey secretKey;
+
+    private final JwtConfig config;
+
+
+
+    public SecurityConfig(MyUserDetailsService userDetailsService, PasswordEncoder encoder, SecretKey secretKey, JwtConfig config) {
         this.userDetailsService = userDetailsService;
         this.encoder = encoder;
+        this.secretKey = secretKey;
+        this.config = config;
     }
 
     @Override
@@ -28,6 +42,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .csrf().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), config, secretKey))
+                .addFilterAfter(new JwtAuthorizationFilter(config,secretKey),JwtAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority(ADMIN.name(),USER_READ.name())
                 .antMatchers(HttpMethod.PUT, "/api/user/**").hasAnyAuthority(ADMIN.name(),USER_EDIT.name())
