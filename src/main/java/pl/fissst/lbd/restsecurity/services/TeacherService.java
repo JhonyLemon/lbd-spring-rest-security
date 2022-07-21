@@ -1,13 +1,12 @@
 package pl.fissst.lbd.restsecurity.services;
 
 import org.springframework.stereotype.Service;
+import pl.fissst.lbd.restsecurity.dto.Student;
 import pl.fissst.lbd.restsecurity.dto.Teacher;
 import pl.fissst.lbd.restsecurity.dto.enums.Subject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TeacherService {
@@ -59,6 +58,54 @@ public class TeacherService {
         return this.teachers;
     }
 
+    public Teacher insertTeacher(Teacher teacher){
+        if(teachers.stream().filter(x-> x.getSubject()==teacher.getSubject()).count()==0) {
+            return addTeacher(teacher);
+        }
+        throw new IllegalArgumentException("Subject must be unique");
+    }
+    public Boolean deleteTeacher(Long id){
+        Teacher teacher = index.get(id);
+        if(teacher!=null){
+            index.remove(teacher);
+            if(teachers.remove(teacher))
+                return true;
+            else
+                throw new IllegalStateException("Failed to delete teacher");
+        }
+        throw new NoSuchElementException("Teacher with given id not found");
+    }
+    public Teacher getTeacher(Long id){
+        Teacher teacher = index.get(id);
+        if(teacher!=null){
+            return teacher;
+        }
+        throw new NoSuchElementException("Teacher with given id not found");
+    }
+    public List<Student> getTeacherClass(Long id){
+        Teacher teacher = index.get(id);
+        if(teacher!=null){
+            List<Student> list= studentService.getAllStudents()
+                    .stream()
+                    .filter(x-> x.getSubjects()!=null && x.getSubjects().contains(teacher.getSubject()))
+                    .collect(Collectors.toList());
+            if(list.size()==0)
+                throw new NoSuchElementException("No students in teacher class found");
+            else
+                return list;
+        }
+        throw new NoSuchElementException("Teacher with given id not found");
+    }
 
+    public Boolean deleteStudentFromClassByTeacherId(Long studentId,Long teacherId){
+        Teacher teacher = index.get(teacherId);
+        if(teacher!=null){
+            if(studentService.getStudent(studentId).getSubjects().remove(teacher.getSubject()))
+                return true;
+            else
+                throw new IllegalStateException("Failed to delete student from class");
+        }
+        throw new NoSuchElementException("Teacher with given id not found");
+    }
 
 }
